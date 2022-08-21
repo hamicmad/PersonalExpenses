@@ -17,7 +17,7 @@ namespace PersonalExpenses.Wallets
         public async void AddCard(string name)
         {
             card = new Card() { Name = name };
-            db.Cards.Add(card);
+            await db.Cards.AddAsync(card);
         }
 
         public async void AddIncome(decimal amount, int cardId)

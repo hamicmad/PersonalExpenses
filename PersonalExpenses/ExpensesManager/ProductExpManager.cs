@@ -6,7 +6,6 @@ namespace PersonalExpenses.ExpensesManager
 {
     public class ProductExpManager
     {
-        private readonly ProductsExpense prodExp = new ProductsExpense();
         private readonly AppContext db;
 
         public ProductExpManager()
@@ -26,5 +25,33 @@ namespace PersonalExpenses.ExpensesManager
             }
         }
 
+        public async Task<List<ProductsExpense>> ReadExpenses()
+        {
+            return await db.ProductsExpenses.ToListAsync();
+        }
+
+        public async Task Change(int expId, int cardId, decimal sum)
+        {
+            var exp = await db.ProductsExpenses.FirstOrDefaultAsync(e => e.Id == expId);
+            var card = await db.Cards.FirstOrDefaultAsync(c => c.Id == cardId);
+            if(exp != null && card != null)
+            {
+                card.Balance += exp.ExpenseSum;
+                exp.ExpenseSum = sum;
+                card.Balance -= sum;
+                await db.SaveChangesAsync();
+            }    
+        }
+        public async Task Delete(int expId,int cardId)
+        {
+            var exp = await db.ProductsExpenses.FirstOrDefaultAsync(e => e.Id == expId);
+            var card = await db.Cards.FirstOrDefaultAsync(c => c.Id == cardId);
+            if(exp != null && card != null)
+            {
+                card.Balance += exp.ExpenseSum;
+                db.ProductsExpenses.Remove(exp);
+                await db.SaveChangesAsync();
+            }
+        }
     }
 }
