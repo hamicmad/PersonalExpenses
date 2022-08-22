@@ -8,8 +8,9 @@ namespace PersonalExpenses
     public class AppContext : DbContext
     {
         public DbSet<Card> Cards => Set<Card>();
-        public DbSet<ProductsExpense> ProductsExpenses => Set<ProductsExpense>();
+        public DbSet<ProductsExp> ProductsExpenses => Set<ProductsExp>();
         public DbSet<Salary> Salaries => Set<Salary>();
+        public DbSet<EntertaimentsExp> EntertaimentsExps => Set<EntertaimentsExp>();
 
         public AppContext()
         {

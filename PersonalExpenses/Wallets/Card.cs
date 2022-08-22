@@ -9,6 +9,8 @@ namespace PersonalExpenses.Wallets
         public string? Name { get; set; }
         public decimal Balance { get; set; } = 0;
 
-        public List<Salary> Salaries { get; set; }
+        public List<Salary> Salaries { get; set; } = new();
+        public List<ProductsExp> ProductsExps { get; set; } = new();
+        public List<EntertaimentsExp> EntertaimentsExps { get; set; } = new();
     }
 }

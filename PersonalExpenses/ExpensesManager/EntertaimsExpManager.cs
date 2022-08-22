@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonalExpenses.Expenses;
-using PersonalExpenses.Wallets;
 
 namespace PersonalExpenses.ExpensesManager
 {
-    public class ProductExpManager
+    public class EntertaimsExpManager
     {
         private readonly AppContext db;
 
-        public ProductExpManager()
+        public EntertaimsExpManager()
         {
             db = new AppContext();
         }
@@ -19,37 +18,37 @@ namespace PersonalExpenses.ExpensesManager
             if (card != null)
             {
                 card.Balance -= amount;
-                var expense = new ProductsExp(amount, card.Id);
-                await db.ProductsExpenses.AddAsync(expense);
+                var expense = new EntertaimentsExp(amount, card.Id);
+                await db.EntertaimentsExps.AddAsync(expense);
                 await db.SaveChangesAsync();
             }
         }
 
-        public async Task<List<ProductsExp>> ReadExpenses()
+        public async Task<List<EntertaimentsExp>> ReadExpenses()
         {
-            return await db.ProductsExpenses.ToListAsync();
+            return await db.EntertaimentsExps.ToListAsync();
         }
 
         public async Task Change(int expId, int cardId, decimal sum)
         {
-            var exp = await db.ProductsExpenses.FirstOrDefaultAsync(e => e.Id == expId);
+            var exp = await db.EntertaimentsExps.FirstOrDefaultAsync(e => e.Id == expId);
             var card = await db.Cards.FirstOrDefaultAsync(c => c.Id == cardId);
-            if(exp != null && card != null)
+            if (exp != null && card != null)
             {
                 card.Balance += exp.ExpenseSum;
                 exp.ExpenseSum = sum;
                 card.Balance -= sum;
                 await db.SaveChangesAsync();
-            }    
+            }
         }
-        public async Task Delete(int expId,int cardId)
+        public async Task Delete(int expId, int cardId)
         {
-            var exp = await db.ProductsExpenses.FirstOrDefaultAsync(e => e.Id == expId);
+            var exp = await db.EntertaimentsExps.FirstOrDefaultAsync(e => e.Id == expId);
             var card = await db.Cards.FirstOrDefaultAsync(c => c.Id == cardId);
-            if(exp != null && card != null)
+            if (exp != null && card != null)
             {
                 card.Balance += exp.ExpenseSum;
-                db.ProductsExpenses.Remove(exp);
+                db.EntertaimentsExps.Remove(exp);
                 await db.SaveChangesAsync();
             }
         }

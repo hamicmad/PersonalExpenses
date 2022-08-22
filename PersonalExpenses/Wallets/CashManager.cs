@@ -3,21 +3,13 @@ using PersonalExpenses.Income;
 
 namespace PersonalExpenses.Wallets
 {
-    public class CardManager
+    public class CashManager
     {
         private readonly AppContext db;
-        private Card card;
-        private Salary salary;
 
-        public CardManager()
+        public CashManager()
         {
             db = new AppContext();
-        }
-
-        public async Task AddCard(string name)
-        {
-            card = new Card() { Name = name };
-            await db.Cards.AddAsync(card);
         }
 
         public async Task AddIncome(decimal amount, int cardId)
