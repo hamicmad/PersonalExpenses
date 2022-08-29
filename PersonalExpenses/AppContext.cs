@@ -5,12 +5,15 @@ namespace PersonalExpenses
 {
     public class PEcontext : DbContext
     {
-        public DbSet<Cash> Cash => Set<Cash>();
-        public DbSet<Card> Cards => Set<Card>();
-        public DbSet<Income> Incomes => Set<Income>();
-        public DbSet<IncomeInfo> IncomesInfo => Set<IncomeInfo>();
-        public DbSet<Expense> Expenses => Set<Expense>();
-        public DbSet<ExpensesInfo> ExpensesInfo => Set<ExpensesInfo>();
+        public DbSet<Wallet> Wallets => Set<Wallet>();
+        public DbSet<WalletType> WalletTypes => Set<WalletType>();
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<CategoryOperation> CategoryOperations => Set<CategoryOperation>();
+
+        public PEcontext()
+        {
+
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -19,15 +22,22 @@ namespace PersonalExpenses
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Cash>().HasMany(c => c.IncomeInfos).WithOne(i => i.Cash);
+            //modelBuilder.Entity<Wallet>(e =>
+            //{
+            //    e.HasOne(w => w.WalletType).WithOne(w => w.Wallet);
+            //    e.HasMany(w => w.CategoryOperations).WithOne(c => c.Wallet);
+            //});
+            modelBuilder.Entity<WalletType>(e =>
+            {
+                e.Property(w => w.Currency).HasConversion<string>();
+            });
+            //modelBuilder.Entity<Category>(e => e.HasMany(c => c.CategoryOperations).WithOne(c => c.Category));
 
-            modelBuilder.Entity<Card>().HasMany(c => c.IncomesInfo).WithMany(i => i.Cards);
-
-            modelBuilder.Entity<Income>().HasMany(i => i.IncomesInfo).WithOne(i => i.Income);
-
-            modelBuilder.Entity<IncomeInfo>().HasOne(i => i.Income).WithMany(i => i.IncomesInfo);
-
-
+            //modelBuilder.Entity<CategoryOperation>(e =>
+            //{
+            //    e.HasOne(c => c.Wallet).WithMany(w => w.CategoryOperations);
+            //    e.HasOne(c => c.Category).WithMany(w => w.CategoryOperations);
+            //});
         }
     }
 }
