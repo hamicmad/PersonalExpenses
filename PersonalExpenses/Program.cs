@@ -1,7 +1,6 @@
 ﻿using PersonalExpenses;
 using PersonalExpenses.Controller;
 using PersonalExpenses.Enums;
-using PersonalExpenses.Models;
 
 using var db = new PEcontext();
 db.Database.EnsureDeleted();
@@ -112,18 +111,19 @@ while (true)
                         var wC2 = await WalletSearch(wCntr);
                         var wallet = await wCntr.Read(wC2);
 
-                        Console.WriteLine($"{wallet.WalletType.Name} {wallet.Balance} {wallet.WalletType.Currency}");
+                        Console.WriteLine($"{wallet.WalletType.Name} {wallet.Balance} {Enum.GetName(wallet.WalletType.Currency)}");
                         foreach (var op in wallet.CategoryOperations)
                         {
                             Console.WriteLine($"{op.Category.Type} {op.Category.Name}  {op.Sum} {op.Date}");
                         }
                         break;
                     case ConsoleKey.D3:
+                        var cat3 = 3;
                         var wC3_1 = await WalletSearch(wCntr);
                         var wC3_2 = await WalletSearch(wCntr);
                         Console.WriteLine("Введите сумму для перевода:");
                         var sumC3 = decimal.Parse(Console.ReadLine());
-                        await wCntr.TransferMoney(sumC3, wC3_1, wC3_2);
+                        await wCntr.TransferMoney(sumC3, cat3, wC3_1, wC3_2);
                         Console.WriteLine("Сохранено");
                         break;
                     case ConsoleKey.D4:
@@ -207,9 +207,11 @@ static (string name, Currency currency) EnterWallet()
     var name = Console.ReadLine();
 
     Console.WriteLine("Выберите валюту:");
+    int num = 0;
     foreach (var item in Enum.GetValues(typeof(Currency)))
     {
-        Console.WriteLine($"{item}");
+        Console.WriteLine($"{num}. {item}");
+        num++;
     }
     var currency = (Currency)int.Parse(Console.ReadLine());
     return (name, currency);

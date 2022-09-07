@@ -1,6 +1,4 @@
-﻿
-
-using PersonalExpenses.Enums;
+﻿using PersonalExpenses.Enums;
 
 namespace PersonalExpenses.Models
 {
@@ -16,31 +14,6 @@ namespace PersonalExpenses.Models
         {
             Name = name;
             Type = type;
-        }
-    }
-
-    public class CategoryOperation
-    {
-        public int Id { get; set; }
-        public decimal Sum { get; set; }
-        public DateTime Date { get; set; }
-
-        public int CategoryId { get; set; }
-        public Category Category { get; set; }
-        public int WalletId { get; set; }
-        public Wallet Wallet { get; set; }
-
-        public CategoryOperation(decimal sum, int categoryId, int walletId)
-        {
-            Sum = sum;
-            Date = DateTime.Now;
-            CategoryId = categoryId;
-            WalletId = walletId;
-        }
-
-        public override string ToString()
-        {
-            return $"Кошелёк: {Wallet.WalletType.Name} Сумма: {Sum}, Дата: {Date},";
         }
     }
 }

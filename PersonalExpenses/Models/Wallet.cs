@@ -5,7 +5,7 @@ namespace PersonalExpenses.Models
     public class Wallet
     {
         public int Id { get; set; }
-        public decimal Balance { get; set; } = 0m;
+        public decimal Balance { get; set; }
 
         public WalletType WalletType { get; set; }
         public List<CategoryOperation> CategoryOperations { get; set; } = new();
@@ -19,15 +19,5 @@ namespace PersonalExpenses.Models
 
         public int WalletId { get; set; }
         public Wallet Wallet { get; set; }
-
-        public WalletType() { }
-
-        public WalletType(string name, Wallet wallet, Currency currency)
-        {
-            Name = name;
-            Wallet = wallet;
-            Currency = Currency;
-        }
     }
-
 }

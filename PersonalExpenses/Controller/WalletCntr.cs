@@ -17,7 +17,12 @@ namespace PersonalExpenses.Controller
         {
             var wallet = new Wallet();
             await db.Wallets.AddAsync(wallet);
-            var walletType = new WalletType(name, wallet, currency);
+            var walletType = new WalletType()
+            {
+                Name = name,
+                Wallet = wallet,
+                Currency = currency
+            };
             await db.WalletTypes.AddAsync(walletType);
             await db.SaveChangesAsync();
         }
@@ -29,10 +34,13 @@ namespace PersonalExpenses.Controller
 
         public async Task<Wallet> Read(int id)
         {
-            return await db.Wallets.Include(w => w.WalletType)
+            var wallet = await db.Wallets.Include(w => w.WalletType)
                                    .Include(c => c.CategoryOperations)
                                    .ThenInclude(c => c.Category)
                                    .FirstOrDefaultAsync(c => c.Id == id);
+            db.Entry(wallet).Reload();
+
+            return wallet;
         }
 
         public async Task Update(int id, string name, Currency currency)
@@ -58,13 +66,29 @@ namespace PersonalExpenses.Controller
             }
         }
 
-        public async Task TransferMoney(decimal sum, int fromId, int toId)
+        public async Task TransferMoney(decimal sum, int cId, int fromId, int toId)
         {
             var fWallet = await db.Wallets.FirstOrDefaultAsync(w => w.Id == fromId);
             var tWallet = await db.Wallets.FirstOrDefaultAsync(w => w.Id == toId);
+            var category = await db.Categories.FirstOrDefaultAsync(c => c.Id == cId);
 
-            if (fWallet != null && tWallet != null)
+            if (fWallet != null && tWallet != null && category != null)
             {
+                category.CategoryOperations.Add(new CategoryOperation()
+                {
+                    Sum = sum,
+                    Date = DateTime.Now,
+                    CategoryId = category.Id,
+                    WalletId = fWallet.Id,
+                });
+                category.CategoryOperations.Add(new CategoryOperation()
+                {
+                    Sum = sum,
+                    Date = DateTime.Now,
+                    CategoryId = category.Id,
+                    WalletId = tWallet.Id,
+                });
+
                 fWallet.Balance -= sum;
                 tWallet.Balance += sum;
                 await db.SaveChangesAsync();
@@ -72,4 +96,5 @@ namespace PersonalExpenses.Controller
         }
     }
 }
+
 

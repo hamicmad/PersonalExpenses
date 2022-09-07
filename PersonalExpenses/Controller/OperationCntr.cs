@@ -13,15 +13,20 @@ namespace PersonalExpenses.Controller
             db = new PEcontext();
         }
 
-        public async Task Create(decimal sum, int wId, int cId)
+        public async Task Create(decimal sum, int cId, int wId)
         {
             var wallet = await db.Wallets.FirstOrDefaultAsync(c => c.Id == wId);
             var category = await db.Categories.FirstOrDefaultAsync(i => i.Id == cId);
 
             if (wallet != null && category != null)
             {
-                category.CategoryOperations.Add(new CategoryOperation(sum, category.Id, wallet.Id));
-
+                category.CategoryOperations.Add(new CategoryOperation()
+                {
+                    Sum = sum,
+                    Date = DateTime.Now,
+                    CategoryId = category.Id,
+                    WalletId = wallet.Id,
+                });
                 if (category.Type == Types.Expense)
                 {
                     wallet.Balance -= sum;
@@ -39,15 +44,15 @@ namespace PersonalExpenses.Controller
             var op = await db.CategoryOperations.Include(c => c.Wallet)
                                                 .Include(c => c.Category)
                                                 .FirstOrDefaultAsync(c => c.Id == id);
-            if(op != null)
+            if (op != null)
             {
-                if(op.Category.Type == Types.Expense)
+                if (op.Category.Type == Types.Expense)
                 {
                     op.Wallet.Balance += op.Sum;
                     op.Wallet.Balance -= sum;
                     op.Sum = sum;
                 }
-                if(op.Category.Type == Types.Income)
+                if (op.Category.Type == Types.Income)
                 {
                     op.Wallet.Balance -= op.Sum;
                     op.Wallet.Balance += sum;
@@ -61,7 +66,7 @@ namespace PersonalExpenses.Controller
         {
             var op = await db.CategoryOperations.Include(c => c.Category).Include(c => c.Wallet).FirstOrDefaultAsync(c => c.Id == id);
 
-            if(op != null)
+            if (op != null)
             {
                 if (op.Category.Type == Types.Expense)
                 {

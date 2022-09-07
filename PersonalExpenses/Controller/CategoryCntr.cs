@@ -28,8 +28,8 @@ namespace PersonalExpenses.Controller
         public async Task<Category> Read(int id)
         {
             return await db.Categories.Include(c => c.CategoryOperations)
-                                              .ThenInclude(c => c.Wallet.WalletType)
-                                              .FirstOrDefaultAsync(c => c.Id == id);
+                                      .ThenInclude(c => c.Wallet.WalletType)
+                                      .FirstOrDefaultAsync(c => c.Id == id);
         }
 
 

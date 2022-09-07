@@ -3,6 +3,7 @@
     public enum Types
     {
         Expense = 1,
-        Income
+        Income,
+        Tranfer
     };
 }

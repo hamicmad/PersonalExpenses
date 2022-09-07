@@ -3,7 +3,7 @@ namespace PersonalExpenses.Enums
 {
     public enum Currency
     {
-        BYN = 1,
+        BYN,
         EUR,
         USD
     };
